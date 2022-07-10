@@ -9,6 +9,8 @@
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+        <!-- jquary.js -->
+        <script src="//code.jquery.com/jquery.js"></script>
     </head>
     <body class="min-vh-100 d-flex flex-column">
         <header class="flex-shrink-0">
@@ -29,6 +31,10 @@
                 </div>
             </nav>
         </header>
+            @include('flash::message')
+            <script>
+                $('#flash-overlay-modal').modal();
+            </script>
         <div class="container-lg">
             <h1 class="mt-5 mb-3">Сайт: {{$host->name}}</h1>
             <div class="table-responsive">
@@ -65,5 +71,8 @@
             </form>
             </div>
         </div>
+        <!-- <script>
+            $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+        </script> -->
     </body>
 </html>

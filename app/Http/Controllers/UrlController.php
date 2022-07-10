@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
+use PDO;
 
 class UrlController extends Controller
 {
@@ -37,10 +38,17 @@ class UrlController extends Controller
         ]);
 
         // "|lte:255|unique:urls.name"
-        $name = parse_url($url['name'], PHP_URL_HOST);
-        $schema = parse_url($url['name'], PHP_URL_SCHEME);
+        $parsed = parse_url($url['name'], PHP_URL_SCHEME)
+                                                    . "://"
+                                                        . parse_url($url['name'], PHP_URL_HOST);
 
-        $parsed = $schema . "://" . $name;
+        $urlItem = DB::table('urls')->where('name', $parsed)->first();
+
+        if ($urlItem) {
+            flash('Страница уже существует');
+            return redirect('urls/'. $urlItem->id)->with([ 'host' => $urlItem ]);
+        }
+
         $date = Carbon::now();
         DB::table('urls')->insert([
             'name' => $parsed,
