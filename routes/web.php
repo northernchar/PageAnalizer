@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\UrlController;
+use App\Http\Controllers\CurrentUrlController;
 use Illuminate\Http\Request;
 
 /*
@@ -22,3 +23,9 @@ Route::controller(UrlController::class)->group(function () {
     Route::get('/urls', 'index')->name('urls');
     Route::post('/urls', 'store');
 });
+
+Route::controller(CurrentUrlController::class)->group(function () {
+    Route::get('/urls/{id}', 'index')->name('current');
+});
+
+Route::post('/urls/{id}/checks', [CurrentUrlController::class, 'check']);
