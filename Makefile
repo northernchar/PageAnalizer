@@ -42,3 +42,17 @@ ide-helper:
 	php artisan ide-helper:gen
 	php artisan ide-helper:meta
 	php artisan ide-helper:mod -n
+
+fpush:
+	git add .
+	git commit -m 'fix'
+	git push
+
+fcommit:
+	git add .
+	git commit -m 'fix'
+
+hpush:
+	git add .
+	git commit -m 'fix'
+	git push heroku main

@@ -44,7 +44,67 @@
                         </tr>
                     @endforeach
                 </table>
+                <nav class="d-flex justify-items-center justify-content-between">
+                    <div class="d-none flex-sm-fill d-sm-flex align-items-sm-center justify-content-sm-between">
+                        <div>
+                            <p class="small text-muted">
+                                Showing
+                                <span class="font-medium">
+                                    @if ($page === 1)
+                                        1
+                                    @else
+                                        {{$perPage * ($page - 1) + 1}}
+                                    @endif
+                                </span>
+                                to
+                                <span class="font-medium">
+                                    @if ($page == $pageCount)
+                                        {{$count}}
+                                    @else
+                                        {{$page * $perPage}}
+                                    @endif
+                                </span>
+                                of
+                                <span class="font-medium">
+                                    {{$count}}
+                                </span>
+                                results
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <ul class="pagination">
+                            @if ($page == 1)
+                                    <li class="page-item disabled" aria-disabled="true" aria-label="pagination.previous">
+                                        <span class="page-link" aria-hidden="true">&lsaquo;</span>
+                                    </li>
+                                @else
+                                    <a class="page-link" href={{ "/urls?page=" . $page - 1 }} rel="prev" aria-label="pagination.previous">&lsaquo;</a>
+                            @endif
+
+                            @for ($i = 1; $i <=$pageCount; $i++)
+                                @if ($i == $page)
+                                    <li class="page-item active" aria-current="page"><span class="page-link">{{$i}}</span></li>
+                                    @continue
+                                @endif
+                                
+                            <li class="page-item"><a class="page-link" href= {{ "/urls?page=" . $i }} >{{$i}}</a></li>
+                            @endfor
+
+                            @if ($page != $pageCount)
+                                <li class="page-item">
+                                    <a class="page-link" href={{ "/urls?page=" . $page + 1 }} rel="next" aria-label="pagination.next">&rsaquo;</a>
+                                </li>
+                            @else
+                                <li class="page-item disabled" aria-disabled="true" aria-label="pagination.next">
+                                    <span class="page-link" aria-hidden="true">&rsaquo;</span>
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
+                </nav>
             </div>
         </div>
     </body>
 </html>
+
