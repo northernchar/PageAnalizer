@@ -51,8 +51,3 @@ fpush:
 fcommit:
 	git add .
 	git commit -m 'fix'
-
-hpush:
-	git add .
-	git commit -m 'fix'
-	git push heroku main
