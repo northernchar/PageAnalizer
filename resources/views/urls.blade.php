@@ -39,13 +39,12 @@
                     @foreach ($urls as $url)
                         <tr>
                             <td>{{ $url->id }}</td>
-                            <td>{{ $url->name }}</td>
+                            <td><a href={{"/urls/" . $url->id}}>{{ $url->name }}</a></td>
                             <td>{{ $url->created_at }}</td>
                         </tr>
                     @endforeach
                 </table>
             </div>
         </div>
-
     </body>
 </html>
