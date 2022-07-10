@@ -80,7 +80,7 @@ return [
         'array' => 'The :attribute must not have more than :value items.',
         'file' => 'The :attribute must be less than or equal to :value kilobytes.',
         'numeric' => 'The :attribute must be less than or equal to :value.',
-        'string' => 'The :attribute must be less than or equal to :value characters.',
+        'string' => 'Некорректный URL',
     ],
     'mac_address' => 'The :attribute must be a valid MAC address.',
     'max' => [

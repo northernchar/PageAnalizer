@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\UrlController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,9 @@ use Illuminate\Support\Facades\DB;
 |
 */
 
-Route::get('/', function () {
-    return view('test');
+Route::view('/', 'main')->name('main');
+
+Route::controller(UrlController::class)->group(function () {
+    Route::get('/urls', 'index')->name('urls');
+    Route::post('/urls', 'store');
 });
