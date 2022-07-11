@@ -31,7 +31,7 @@ test-coverage:
 deploy:
 	git push heroku main
 
-lint:
+lintold:
 	composer phpcs
 
 lint-fix:
@@ -54,3 +54,9 @@ fc:
 
 seed:
 	php artisan migrate:fresh --seed
+
+lint: 
+	composer exec --verbose phpcs -- --standard=PSR12 app/Http/Controllers/UrlController.php
+	composer exec --verbose phpcs -- --standard=PSR12 app/Models
+	composer exec --verbose phpcs -- --standard=PSR12 tests/Feature
+	composer exec --verbose phpcs -- --standard=PSR12 routes/web.php

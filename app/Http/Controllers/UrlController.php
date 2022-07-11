@@ -15,7 +15,7 @@ class UrlController extends Controller
     /**
      * Show all urls
      *
-     * 
+     *
      * @return \Illuminate\View\View
      */
     public function index(Request $request)
@@ -32,7 +32,6 @@ class UrlController extends Controller
         if ($pageCount == 0) {
             $pageCount = 1;
         }
-        
         if ($page > $pageCount  || $page < 1) {
                 return abort(404);
         }

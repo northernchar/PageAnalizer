@@ -6,7 +6,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Url;
 
-
 class UrlControllerTest extends TestCase
 {
     protected $urls;
@@ -23,7 +22,6 @@ class UrlControllerTest extends TestCase
     {
         $response = $this->get('/urls');
         $response->assertStatus(200);
-
     }
 
     public function testIndexWithId()
@@ -37,7 +35,6 @@ class UrlControllerTest extends TestCase
 
         // $url = $this->urls->first()->toArray();
         // $this->assertDatabaseHas('urls', $url);
-
     }
 
     public function testStore()
@@ -56,6 +53,5 @@ class UrlControllerTest extends TestCase
         $this->assertDatabaseHas('urls', [
             'name' => $parsed
         ]);
-
     }
 }
