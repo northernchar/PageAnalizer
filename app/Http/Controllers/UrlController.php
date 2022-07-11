@@ -47,7 +47,7 @@ class UrlController extends Controller
                             ->offset($offset)
                                 ->limit($perPage)
                                     ->get();
-        
+
 
         return view('urls', [
             'urls' => $urls,
@@ -91,12 +91,20 @@ class UrlController extends Controller
                                                         . parse_url($url['name'], PHP_URL_HOST);
 
         $urlItem = DB::table('urls')->where('name', $parsed)->first();
-        
+
 
         if ($urlItem) {
             flash('Страница уже существует');
-            $checks = DB::table('url_checks')->select()->where('url_id', $urlItem->id)->orderBy('id', 'desc')->limit(50)->get();
-            return redirect()->route('urls.id', ['id' => $urlItem->id])->with(['host' => $urlItem, 'checks' => $checks]);
+            $checks = DB::table('url_checks')
+                ->select()
+                    ->where('url_id', $urlItem->id)
+                        ->orderBy('id', 'desc')
+                            ->limit(50)
+                                ->get();
+
+            return redirect()
+                ->route('urls.id', ['id' => $urlItem->id])
+                    ->with(['host' => $urlItem, 'checks' => $checks]);
         }
 
         $date = Carbon::now();
@@ -107,8 +115,16 @@ class UrlController extends Controller
 
         $added = DB::table('urls')->where('name', $parsed)->first();
         flash('Страница успешно добавлена!')->success();
-        $checks = DB::table('url_checks')->select()->where('url_id', $added->id)->orderBy('id', 'desc')->limit(50)->get();
-        return redirect()->route('urls.id', ['id' => $added->id])->with(['host' => $added, 'checks' => $checks]);
+        $checks = DB::table('url_checks')
+            ->select()
+                ->where('url_id', $added->id)
+                    ->orderBy('id', 'desc')
+                        ->limit(50)
+                            ->get();
+
+        return redirect()
+            ->route('urls.id', ['id' => $added->id])
+                ->with(['host' => $added, 'checks' => $checks]);
     }
 
     public function check(Request $request)

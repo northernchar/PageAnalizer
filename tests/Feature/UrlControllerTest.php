@@ -16,7 +16,7 @@ class UrlControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         DB::table('urls')->insert([
             'name' => 'https://hexlet.io',
             'created_at' => fake()->date(),
@@ -48,9 +48,6 @@ class UrlControllerTest extends TestCase
             'id' => $id,
         ]));
         $response->assertOk();
-
-        // $url = $this->urls->first()->toArray();
-        // $this->assertDatabaseHas('urls', $url);
     }
 
     public function testStore()
