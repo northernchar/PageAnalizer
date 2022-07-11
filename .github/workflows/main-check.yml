@@ -66,6 +66,9 @@ jobs:
       - name: 'Install phpunit'
         run: composer require phpunit/phpunit ^9.5
 
+      - name: Prepare the application
+        run: php artisan key:generate
+
       - name: Clear Config
         run: php artisan config:clear
 
