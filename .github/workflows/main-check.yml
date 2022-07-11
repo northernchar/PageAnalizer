@@ -28,7 +28,7 @@ jobs:
     env:
       PHP_CS_FIXER_FUTURE_MODE: '0'
       CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-    name: "Lint, test and code coverage"
+
     steps:
       - uses: actions/checkout@v2
       - name: 'Setup PHP'
@@ -51,4 +51,4 @@ jobs:
         run: composer require phpunit/phpunit ^9.5
       - name: Run Tests
         run: |
-          php artisan test
+          php vendor/bin/phpunit --coverage-clover clover.xml --configuration phpunit.xml tests

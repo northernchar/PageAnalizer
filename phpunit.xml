@@ -27,5 +27,7 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="DIR_FOR_UTESTS" value="tests/Unit"/>
+        <env name="DIR_FOR_FTESTS" value="tests/Feature"/>
     </php>
 </phpunit>
