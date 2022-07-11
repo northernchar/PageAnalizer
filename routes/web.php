@@ -23,6 +23,5 @@ Route::controller(UrlController::class)->group(function () {
     Route::get('/urls', 'index')->name('urls.index');
     Route::post('/urls', 'store')->name('urls.post');
     Route::get('/urls/{id}', 'indexWithId')->name('urls.id');
+    Route::post('/urls/{id}/checks', 'check')->name('url.check');
 });
-
-Route::post('/urls/{id}/checks', [CurrentUrlController::class, 'check'])->name('url.check');

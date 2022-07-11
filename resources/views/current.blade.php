@@ -69,6 +69,27 @@
                 {{ csrf_field() }}
                 <input type="submit" class="btn btn-primary" value="Запустить проверку">
             </form>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-nowrap">
+                    <tr>
+                        <td>
+                            ID
+                        </td>
+                        <td>
+                            Дата создания
+                        </td>
+                    </tr>
+                    @foreach ($checks as $check)
+                        <tr>
+                            <td>
+                                {{$check->id}}
+                            </td>
+                            <td>
+                                {{$check->created_at}}
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
             </div>
         </div>
         <!-- <script>

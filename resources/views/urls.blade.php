@@ -40,7 +40,7 @@
                         <tr>
                             <td>{{ $url->id }}</td>
                             <td><a class="link-info" href={{"/urls/" . $url->id}}>{{ $url->name }}</a></td>
-                            <td>{{ $url->created_at }}</td>
+                            <td>{{ $url->updated_at }}</td>
                         </tr>
                     @endforeach
                 </table>
