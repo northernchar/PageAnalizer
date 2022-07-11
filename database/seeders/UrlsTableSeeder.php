@@ -19,6 +19,6 @@ class UrlsTableSeeder extends Seeder
         //     'created_at' => '1999-01-01',
         // ]);
 
-        \App\Models\Url::factory(10)->create();
+        \App\Models\Url::factory(100)->create();
     }
 }

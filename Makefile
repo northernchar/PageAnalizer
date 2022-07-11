@@ -48,6 +48,9 @@ fpush:
 	git commit -m 'fix'
 	git push
 
-fcommit:
+fc:
 	git add .
 	git commit -m 'fix'
+
+seed:
+	php artisan migrate:fresh --seed

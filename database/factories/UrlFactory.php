@@ -18,7 +18,7 @@ class UrlFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->url,
             'created_at' => fake()->date()
         ];
     }

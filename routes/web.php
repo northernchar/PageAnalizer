@@ -20,12 +20,9 @@ use Illuminate\Http\Request;
 Route::view('/', 'main')->name('main');
 
 Route::controller(UrlController::class)->group(function () {
-    Route::get('/urls', 'index')->name('urls');
-    Route::post('/urls', 'store');
+    Route::get('/urls', 'index')->name('urls.index');
+    Route::post('/urls', 'store')->name('urls.post');
+    Route::get('/urls/{id}', 'indexWithId')->name('urls.id');
 });
 
-Route::controller(CurrentUrlController::class)->group(function () {
-    Route::get('/urls/{id}', 'index')->name('current');
-});
-
-Route::post('/urls/{id}/checks', [CurrentUrlController::class, 'check']);
+Route::post('/urls/{id}/checks', [CurrentUrlController::class, 'check'])->name('url.check');

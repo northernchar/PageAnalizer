@@ -29,8 +29,12 @@ class UrlController extends Controller
         $count = DB::table('urls')->count();
         $pageCount = (int) ceil($count / $perPage);
 
-        if ($page > $pageCount || $page < 1) {
-            return abort(404);
+        if ($pageCount == 0) {
+            $pageCount = 1;
+        }
+        
+        if ($page > $pageCount  || $page < 1) {
+                return abort(404);
         }
 
         return view('urls', [
@@ -40,6 +44,19 @@ class UrlController extends Controller
             'perPage' => $perPage,
             'count' => $count,
         ]);
+    }
+
+    /**
+     * Show specific url
+     *
+     *
+     * @return \Illuminate\View\View
+     */
+    public function indexWithId($id)
+    {
+        $host = DB::table('urls')->find($id);
+
+        return view('current', [ 'host' => $host ]);
     }
 
     /**
@@ -65,7 +82,7 @@ class UrlController extends Controller
         if ($urlItem) {
             flash('Страница уже существует');
 
-            return redirect()->route('current', ['id' => $urlItem->id])->with(['host' => $urlItem]);
+            return redirect()->route('urls.id', ['id' => $urlItem->id])->with(['host' => $urlItem]);
         }
 
         $date = Carbon::now();
@@ -77,6 +94,6 @@ class UrlController extends Controller
         $added = DB::table('urls')->where('name', $parsed)->first();
         flash('Страница успешно добавлена!')->success();
 
-        return redirect()->route('current', ['id' => $added->id])->with(['host' => $added]);
+        return redirect()->route('urls.id', ['id' => $added->id])->with(['host' => $added]);
     }
 }

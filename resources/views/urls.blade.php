@@ -50,8 +50,12 @@
                             <p class="small text-muted">
                                 Showing
                                 <span class="font-medium">
-                                    @if ($page === 1)
-                                        1
+                                    @if ($page == 1)
+                                        @if ($count >= 1)
+                                            1
+                                        @else
+                                            0
+                                        @endif
                                     @else
                                         {{$perPage * ($page - 1) + 1}}
                                     @endif
@@ -61,7 +65,11 @@
                                     @if ($page == $pageCount)
                                         {{$count}}
                                     @else
-                                        {{$page * $perPage}}
+                                        @if ($count === 0)
+                                            0
+                                        @else
+                                            {{$page * $perPage}}
+                                        @endif
                                     @endif
                                 </span>
                                 of
