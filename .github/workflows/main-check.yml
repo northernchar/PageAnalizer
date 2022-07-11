@@ -18,6 +18,11 @@ on:
 env:
   COVERAGE: '1'
   php_extensions: 'pcntl, pcov, ...'
+  DB_CONNECTION: pgsql
+  DB_HOST: ec2-34-233-115-14.compute-1.amazonaws.com
+  DB_PASSWORD: 4a36b7cb2a4d9251159072a51ed7a256e2b8859b741f568690075c87add7ef32
+  DB_USERNAME: fjyvgqlvgtmzro
+  DB_DATABASE: d68ash73vn1jc2
   
 jobs:
   build:
@@ -27,8 +32,19 @@ jobs:
         operating_system: ['ubuntu-latest']
     env:
       PHP_CS_FIXER_FUTURE_MODE: '0'
-      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
 
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: fjyvgqlvgtmzro
+          POSTGRES_PASSWORD: 4a36b7cb2a4d9251159072a51ed7a256e2b8859b741f568690075c87add7ef32
+          POSTGRES_DB: d68ash73vn1jc2
+        ports:
+          - 5432/tcp
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
+        
     steps:
       - uses: actions/checkout@v2
       - name: 'Setup PHP'
@@ -49,6 +65,15 @@ jobs:
         run: 'composer exec --verbose phpcs -- --standard=PSR12 routes'
       - name: 'Install phpunit'
         run: composer require phpunit/phpunit ^9.5
+
+      - name: Clear Config
+        run: php artisan config:clear
+
+      - name: Run Migration
+        run: php artisan migrate -v
+        env:
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
       - name: Run Tests
-        run: |
-          php vendor/bin/phpunit --configuration phpunit.xml tests
+        run: php vendor/bin/phpunit --configuration phpunit.xml tests
+        env:
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
