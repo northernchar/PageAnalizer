@@ -67,8 +67,10 @@ jobs:
         run: composer require phpunit/phpunit ^9.5
 
       - name: Prepare the application
-        run: php artisan key:generate
-
+        run: |
+          php -r "file_exists('.env') || copy('.env.example', '.env');"
+          php artisan key:generate
+          
       - name: Clear Config
         run: php artisan config:clear
 
