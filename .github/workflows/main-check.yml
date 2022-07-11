@@ -51,4 +51,4 @@ jobs:
         run: composer require phpunit/phpunit ^9.5
       - name: Run Tests
         run: |
-          php vendor/bin/phpunit --coverage-clover clover.xml --configuration phpunit.xml tests
+          php vendor/bin/phpunit --configuration phpunit.xml tests
