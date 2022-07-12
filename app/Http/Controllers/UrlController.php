@@ -187,7 +187,7 @@ class UrlController extends Controller
             'url_id' => $id,
             'created_at' => Carbon::now(),
             'status_code' => $status_code,
-            'h1' => Str::limit($h1, 30),
+            'h1' => Str::limit($h1, 10),
             'title' => Str::limit($title, 30),
             'description' => Str::limit($description, 30)
         ]);
