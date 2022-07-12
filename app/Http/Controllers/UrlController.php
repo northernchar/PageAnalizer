@@ -155,10 +155,12 @@ class UrlController extends Controller
         $host = DB::table('urls')->find($id);
 
         try {
-            $status_code = Http::withOptions([
+            $resourse = Http::withOptions([
                 'http_errors' => false,
                 'allow_redirects' => false,
-            ])->get($host->name)->status();
+            ])->get($host->name);
+            $status_code = $resourse->status();
+            $content = $resourse->body();
         } catch (\Exception $e) {
             flash('Страница не отвечает')->error();
             return redirect()
@@ -169,21 +171,18 @@ class UrlController extends Controller
         $h1 = '';
         $description = '';
 
-        if ($status_code == 200) {
-            $document = new Document($host->name, true);
-            if ($document->has('title')) {
-                $title = $document->first('title')->firstChild()->text();
-            }
-            if ($document->has('h1')) {
-                $h1children = $document->first('h1')->children();
-                $h1text = array_map(fn($attr) => $attr->text() ,$h1children);
-                $h1 = implode('', $h1text);
-            }
-            if ($document->has('meta[name=description]')) {
-                $description = $document->first('meta[name=description]')->getAttribute('content');
-            }
+        $document = new Document($content);
+        if ($document->has('title')) {
+            $title = $document->first('title')->firstChild()->text();
         }
-
+        if ($document->has('h1')) {
+            $h1children = $document->first('h1')->children();
+            $h1text = array_map(fn($attr) => $attr->text() ,$h1children);
+            $h1 = implode('', $h1text);
+        }
+        if ($document->has('meta[name=description]')) {
+            $description = $document->first('meta[name=description]')->getAttribute('content');
+        }
 
         DB::table('url_checks')->insert([
             'url_id' => $id,
