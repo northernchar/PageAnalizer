@@ -177,14 +177,17 @@ class UrlController extends Controller
         $document = new Document($content);
         if ($document->has('title')) {
             // $title = $document->first('title')?->firstChild()?->text();
-            $tdoc = $document->first('title');
-            $tchild = $tdoc?->firstChild();
+
+            // $tdoc = $document->first('title');
+            // $tchild = $tdoc?->firstChild();
+            $tchild = optional($document->first('title'))->firstChild();
             $title = $tchild?->text();
         }
         if ($document->has('h1')) {
             // $h1children = $document->first('h1')?->children();
-            $h1doc = $document->first('h1');
-            $h1children = gettype($h1doc) === gettype(new DOMElement('h1')) ? $h1doc->children() : [];
+            $h1children = optional($document->first('h1'))->children();
+            // $h1doc = $document->first('h1');
+            // $h1children = gettype($h1doc) === gettype(new DOMElement('h1')) ? $h1doc->children() : [];
 
             $h1text = array_map(fn($attr) => $attr->text(), $h1children);
             $h1 = implode('', $h1text);
