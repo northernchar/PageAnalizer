@@ -179,7 +179,6 @@ class UrlController extends Controller
             $tdoc = $document->first('title');
             $tchild = $tdoc ? $tdoc->firstChild() : new Element('div');
             $title = $tchild->text();
-
         }
         if ($document->has('h1')) {
             // $h1children = $document->first('h1')->children();
