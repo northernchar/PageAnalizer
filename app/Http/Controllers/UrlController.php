@@ -157,9 +157,7 @@ class UrlController extends Controller
         try {
             $status_code = Http::withOptions([
                 'http_errors' => false,
-                'allow_redirects' => [
-                    'max' => 10,        // allow at most 10 redirects.
-                ],
+                'allow_redirects' => false,
             ])->get($host->name)->status();
         } catch (\Exception $e) {
             flash('Страница не отвечает')->error();
