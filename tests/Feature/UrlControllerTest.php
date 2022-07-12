@@ -4,8 +4,6 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\Url;
-use App\Models\UrlCheck;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
@@ -53,7 +51,9 @@ class UrlControllerTest extends TestCase
 
     public function testStore()
     {
-        $data = Url::factory()->make()->only('name');
+        $data = [
+            'name' => fake()->url()
+        ];
 
         $response = $this->post(route('urls.post'), [
             'url' => $data,
