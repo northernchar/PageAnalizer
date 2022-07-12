@@ -84,6 +84,12 @@ class UrlController extends Controller
     {
         $host = DB::table('urls')->find($id);
         $checks = DB::table('url_checks')->select()->where('url_id', $id)->orderBy('id', 'desc')->limit(50)->get();
+        $checks = $checks->map(function ($item) {
+            $item->h1 = Str::limit($item->h1, 10);
+            $item->title = Str::limit($item->title, 30);
+            $item->description = Str::limit($item->description, 30);
+            return $item;
+        });
 
         return view('current', [ 'host' => $host,'checks' => $checks]);
     }
@@ -123,7 +129,7 @@ class UrlController extends Controller
                     ->with(['host' => $urlItem, 'checks' => $checks]);
         }
 
-        $date = Carbon::now()->setTimezone('Europe/Moscow');
+        $date = Carbon::now();
         DB::table('urls')->insert([
             'name' => $parsed,
             'created_at' => $date,
@@ -147,7 +153,6 @@ class UrlController extends Controller
     {
         $id = request()->id;
         $host = DB::table('urls')->find($id);
-        $checks = DB::table('url_checks')->select()->orderBy('id', 'desc')->limit(50)->get();
 
         try {
             $status_code = Http::withOptions([
@@ -159,11 +164,7 @@ class UrlController extends Controller
         } catch (\Exception $e) {
             flash('Страница не отвечает')->error();
             return redirect()
-                ->route('urls.id', [ 'id' => $host->id ])
-                    ->with([
-                        'host' => $host,
-                        'checks' => $checks,
-                    ]);
+                ->route('urls.id', [ 'id' => $host->id ]);
         }
 
         $title = '';
@@ -176,26 +177,26 @@ class UrlController extends Controller
                 $title = $document->first('title')->firstChild()->text();
             }
             if ($document->has('h1')) {
-                $h1 = $document->first('h1')->firstChild()->text();
+                $h1children = $document->first('h1')->children();
+                $h1text = array_map(fn($attr) => $attr->text() ,$h1children);
+                $h1 = implode('', $h1text);
             }
             if ($document->has('meta[name=description]')) {
                 $description = $document->first('meta[name=description]')->getAttribute('content');
             }
         }
 
+
         DB::table('url_checks')->insert([
             'url_id' => $id,
-            'created_at' => Carbon::now()->setTimezone('Europe/Moscow'),
+            'created_at' => Carbon::now(),
             'status_code' => $status_code,
-            'h1' => Str::limit($h1, 10),
-            'title' => Str::limit($title, 30),
-            'description' => Str::limit($description, 30)
+            'h1' => $h1,
+            'title' => $title,
+            'description' => $description,
         ]);
 
         flash('Страница успешно проверена')->success();
-        return redirect()->route('urls.id', [ 'id' => $host->id ])->with([
-            'host' => $host,
-            'checks' => $checks,
-        ]);
+        return redirect()->route('urls.id', [ 'id' => $host->id ]);
     }
 }
