@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use DiDom\Document;
 use DiDom\Element;
+use DOMElement;
 use Illuminate\Support\Str;
 
 class UrlController extends Controller
@@ -183,8 +184,13 @@ class UrlController extends Controller
         if ($document->has('h1')) {
             // $h1children = $document->first('h1')?->children();
             $h1doc = $document->first('h1');
-            $h1children = $h1doc?->children();
-            $h1text = array_map(fn($attr) => $attr->text(), $h1children ? $h1children : []);
+            if (gettype($h1doc) == gettype(new Element('h1')) || gettype($h1doc) == gettype(new DOMElement('h1'))) {
+                $h1children = $h1doc->children();
+            } else {
+                $h1children = [];
+            }
+
+            $h1text = array_map(fn($attr) => $attr->text(), $h1children);
             $h1 = implode('', $h1text);
         }
         if ($document->has('meta[name=description]')) {
