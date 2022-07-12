@@ -57,8 +57,6 @@ jobs:
         run: composer global require "squizlabs/php_codesniffer=*" --prefer-dist --no-progress --no-suggest --optimize-autoloader
       - name: 'Linting UrlController'
         run: 'composer exec --verbose phpcs -- --standard=PSR12 app/Http/Controllers/UrlController.php'
-      - name: 'Linting Models'
-        run: 'composer exec --verbose phpcs -- --standard=PSR12 app/Models'
       - name: 'Linting Tests'
         run: 'composer exec --verbose phpcs -- --standard=PSR12 tests/Feature'
       - name: 'Linting Routes'
