@@ -184,7 +184,7 @@ class UrlController extends Controller
         if ($document->has('h1')) {
             // $h1children = $document->first('h1')?->children();
             $h1doc = $document->first('h1');
-            if (gettype($h1doc) == gettype(new Element('h1')) || gettype($h1doc) == gettype(new DOMElement('h1'))) {
+            if (gettype($h1doc) === gettype(new DOMElement('h1'))) {
                 $h1children = $h1doc->children();
             } else {
                 $h1children = [];
