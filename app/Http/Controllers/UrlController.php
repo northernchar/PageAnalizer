@@ -42,13 +42,15 @@ class UrlController extends Controller
 
         $urls = DB::table('urls')
             ->leftJoin('url_checks', 'urls.id', '=', 'url_checks.url_id')
-                ->selectRaw('urls.*, MAX(url_checks.created_at) as updated_at, MAX(url_checks.status_code) as status_code')
+                ->selectRaw('
+                urls.*, MAX(url_checks.created_at) as updated_at, MAX(url_checks.status_code) as status_code
+                ')
                     ->groupBy('urls.id')
                         ->orderBy('urls.id')
                             ->offset($offset)
                                 ->limit($perPage)
                                     ->get();
-                    
+
 
         $latestDates = DB::table('url_checks')
         ->select('url_id', DB::raw('MAX(created_at) as updated_at'))
@@ -61,7 +63,7 @@ class UrlController extends Controller
         })->get();
 
         $status_codes = $rawCodes->pluck('status_code', 'url_id')->all();
-        
+
         return view('urls', [
             'urls' => $urls,
             'pageCount' => $pageCount,
@@ -70,11 +72,6 @@ class UrlController extends Controller
             'count' => $count,
             'status_codes' => $status_codes
         ]);
-
-
-
-
-
     }
 
     /**
@@ -195,7 +192,6 @@ class UrlController extends Controller
             'description' => Str::limit($description, 30)
         ]);
 
-        
         flash('Страница успешно проверена')->success();
         return redirect()->route('urls.id', [ 'id' => $host->id ])->with([
             'host' => $host,
