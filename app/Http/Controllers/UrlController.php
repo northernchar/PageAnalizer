@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use DiDom\Document;
+use DiDom\Element;
 use Illuminate\Support\Str;
 
 class UrlController extends Controller
@@ -26,7 +27,8 @@ class UrlController extends Controller
 
         $page = $request->query('page') ?? 1;
         $perPage = 10;
-        $offset = $perPage * ($page - 1);
+
+        $offset = !is_array($page) ? $perPage * ($page - 1) : 0;
 
         // $urls = DB::table('urls')->select()->orderBy('id')->offset($offset)->limit($perPage)->get();
 
@@ -80,7 +82,7 @@ class UrlController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function indexWithId($id)
+    public function indexWithId(int $id)
     {
         $host = DB::table('urls')->find($id);
         $checks = DB::table('url_checks')->select()->where('url_id', $id)->orderBy('id', 'desc')->limit(50)->get();
@@ -135,7 +137,7 @@ class UrlController extends Controller
             'created_at' => $date,
         ]);
 
-        $added = DB::table('urls')->where('name', $parsed)->first();
+        $added = DB::table('urls')->where('name', $parsed)->first() ?? 1;
         flash('Страница успешно добавлена!')->success();
         $checks = DB::table('url_checks')
             ->select()
@@ -173,15 +175,22 @@ class UrlController extends Controller
 
         $document = new Document($content);
         if ($document->has('title')) {
-            $title = $document->first('title')->firstChild()->text();
+            // $title = $document->first('title')->firstChild()->text();
+            $tdoc = $document->first('title');
+            $tchild = $tdoc ? $tdoc->firstChild() : new Element('div');
+            $title = $tchild->text();
+
         }
         if ($document->has('h1')) {
-            $h1children = $document->first('h1')->children();
+            // $h1children = $document->first('h1')->children();
+            $h1doc = $document->first('h1');
+            $h1children = $h1doc ? $h1doc->children() : [];
             $h1text = array_map(fn($attr) => $attr->text(), $h1children);
             $h1 = implode('', $h1text);
         }
         if ($document->has('meta[name=description]')) {
-            $description = $document->first('meta[name=description]')->getAttribute('content');
+            $ddoc = $document->first('meta[name=description]');
+            $description = $ddoc->getAttribute('content');
         }
 
         DB::table('url_checks')->insert([

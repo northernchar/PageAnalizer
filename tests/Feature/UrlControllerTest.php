@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Http;
 
 class UrlControllerTest extends TestCase
 {
-    protected $urls;
-    protected $modelCount;
+    protected \Illuminate\Support\Collection $urls;
+    protected int $modelCount;
 
     protected function setUp(): void
     {
