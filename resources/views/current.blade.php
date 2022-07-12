@@ -78,6 +78,9 @@
                         <td>
                             Дата создания
                         </td>
+                        <td>
+                            Код ответа
+                        </td>
                     </tr>
                     @foreach ($checks as $check)
                         <tr>
@@ -86,6 +89,9 @@
                             </td>
                             <td>
                                 {{$check->created_at}}
+                            </td>
+                            <td>
+                                {{$check->status_code}}
                             </td>
                         </tr>
                     @endforeach

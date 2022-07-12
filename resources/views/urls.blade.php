@@ -36,11 +36,17 @@
                     <th>ID</th>
                     <th>Имя</th>
                     <th>Последняя проверка</th>
+                    <th>Код ответа</th>
                     @foreach ($urls as $url)
                         <tr>
                             <td>{{ $url->id }}</td>
                             <td><a class="link-info" href={{"/urls/" . $url->id}}>{{ $url->name }}</a></td>
                             <td>{{ $url->updated_at }}</td>
+                            <td>
+                                @if (array_key_exists($url->id, $status_codes))
+                                {{ $status_codes[$url->id] }}
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </table>

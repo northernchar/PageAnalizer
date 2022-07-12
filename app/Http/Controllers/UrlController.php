@@ -7,8 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Schema;
-use PDO;
+use Illuminate\Support\Facades\Http;
 
 class UrlController extends Controller
 {
@@ -41,21 +40,39 @@ class UrlController extends Controller
 
         $urls = DB::table('urls')
             ->leftJoin('url_checks', 'urls.id', '=', 'url_checks.url_id')
-                ->selectRaw('urls.*, MAX(url_checks.created_at) as updated_at')
+                ->selectRaw('urls.*, MAX(url_checks.created_at) as updated_at, MAX(url_checks.status_code) as status_code')
                     ->groupBy('urls.id')
                         ->orderBy('urls.id')
                             ->offset($offset)
                                 ->limit($perPage)
                                     ->get();
+                    
 
+        $latestDates = DB::table('url_checks')
+        ->select('url_id', DB::raw('MAX(created_at) as updated_at'))
+            ->groupBy('url_id');
 
+        $rawCodes = DB::table('url_checks')
+        ->joinSub($latestDates, 'last_statuses', function ($join) {
+            $join->on('url_checks.url_id', '=', 'last_statuses.url_id');
+            $join->on('url_checks.created_at', '=', 'last_statuses.updated_at');
+        })->get();
+
+        $status_codes = $rawCodes->pluck('status_code', 'url_id')->all();
+        
         return view('urls', [
             'urls' => $urls,
             'pageCount' => $pageCount,
             'page' => $page,
             'perPage' => $perPage,
             'count' => $count,
+            'status_codes' => $status_codes
         ]);
+
+
+
+
+
     }
 
     /**
@@ -130,13 +147,34 @@ class UrlController extends Controller
     public function check(Request $request)
     {
         $id = request()->id;
+        $host = DB::table('urls')->find($id);
+        $checks = DB::table('url_checks')->select()->orderBy('id', 'desc')->limit(50)->get();
+
+        try {
+            $status_code = Http::withOptions([
+                'http_errors' => false,
+                'allow_redirects' => [
+                    'max' => 10,        // allow at most 10 redirects.
+                ],
+            ])->get($host->name)->status();
+        } catch (\Exception $e) {
+            flash('Страница не отвечает')->error();
+            return redirect()
+                ->route('urls.id', [ 'id' => $host->id ])
+                    ->with([
+                        'host' => $host,
+                        'checks' => $checks,
+                    ]);
+        }
+
+
         DB::table('url_checks')->insert([
             'url_id' => $id,
             'created_at' => Carbon::now(),
+            'status_code' => $status_code,
         ]);
 
-        $host = DB::table('url_checks')->find($id);
-        $checks = DB::table('url_checks')->select()->orderBy('id', 'desc')->limit(50)->get();
+        flash('Страница успешно проверена')->success();
         return redirect()->route('urls.id', [ 'id' => $host->id ])->with([
             'host' => $host,
             'checks' => $checks,
