@@ -26,7 +26,7 @@ return new class extends Migration
 
             $table->id()->autoIncrement();
             $table->integer('url_id');
-            $table->integer('status_code')->nullable();
+            $table->string('status_code')->nullable();
             $table->string('h1')->nullable();
             $table->string('title')->nullable();
             $table->string('description')->nullable();

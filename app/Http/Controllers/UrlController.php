@@ -123,7 +123,7 @@ class UrlController extends Controller
                     ->with(['host' => $urlItem, 'checks' => $checks]);
         }
 
-        $date = Carbon::now();
+        $date = Carbon::now()->setTimezone('Europe/Moscow');
         DB::table('urls')->insert([
             'name' => $parsed,
             'created_at' => $date,
@@ -185,7 +185,7 @@ class UrlController extends Controller
 
         DB::table('url_checks')->insert([
             'url_id' => $id,
-            'created_at' => Carbon::now(),
+            'created_at' => Carbon::now()->setTimezone('Europe/Moscow'),
             'status_code' => $status_code,
             'h1' => Str::limit($h1, 10),
             'title' => Str::limit($title, 30),
