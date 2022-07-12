@@ -28,7 +28,7 @@ class UrlController extends Controller
         $page = $request->query('page') ?? 1;
         $perPage = 10;
 
-        $offset = !is_array($page) ? $perPage * ($page - 1) : 0;
+        $offset = $perPage * ((int) $page - 1);
 
         // $urls = DB::table('urls')->select()->orderBy('id')->offset($offset)->limit($perPage)->get();
 
@@ -137,7 +137,7 @@ class UrlController extends Controller
             'created_at' => $date,
         ]);
 
-        $added = DB::table('urls')->where('name', $parsed)->first() ?? 1;
+        $added = DB::table('urls')->where('name', $parsed)->first() ?? collect(['id' => 1]);
         flash('Страница успешно добавлена!')->success();
         $checks = DB::table('url_checks')
             ->select()
@@ -189,7 +189,7 @@ class UrlController extends Controller
         }
         if ($document->has('meta[name=description]')) {
             $ddoc = $document->first('meta[name=description]');
-            $description = $ddoc->getAttribute('content');
+            $description = $ddoc ? $ddoc->getAttribute('content') : '';
         }
 
         DB::table('url_checks')->insert([

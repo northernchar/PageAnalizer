@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Http;
 
 class UrlControllerTest extends TestCase
 {
-    protected \Illuminate\Support\Collection $urls;
     protected int $modelCount;
 
     protected function setUp(): void
@@ -30,7 +29,6 @@ class UrlControllerTest extends TestCase
         ]);
 
         $this->modelCount = DB::table('urls')->count();
-        $this->urls = DB::table('urls')->select()->get();
     }
 
     public function testIndex()
