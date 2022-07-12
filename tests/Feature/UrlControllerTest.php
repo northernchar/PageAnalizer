@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\Models\Url;
 use App\Models\UrlCheck;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class UrlControllerTest extends TestCase
 {
@@ -77,9 +78,11 @@ class UrlControllerTest extends TestCase
             'created_at' => fake()->date(),
         ]);
 
+        Http::fake();
+
         $response = $this->post(route('url.check', [ 'id' => $url_id]))
             ->assertRedirect(route('urls.id', ['id' => $url_id ]));
-
+            
         $response->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('url_checks', [

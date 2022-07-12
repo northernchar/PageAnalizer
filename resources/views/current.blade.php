@@ -31,56 +31,53 @@
                 </div>
             </nav>
         </header>
-            @include('flash::message')
-            <script>
-                $('#flash-overlay-modal').modal();
-            </script>
-        <div class="container-lg">
-            <h1 class="mt-5 mb-3">Сайт: {{$host->name}}</h1>
-            <div class="table-responsive">
+        <main class="flex-grow-1">
+                @include('flash::message')
+                <script>
+                    $('#flash-overlay-modal').modal();
+                </script>
+            <div class="container-lg">
+                <h1 class="mt-5 mb-3">Сайт: {{$host->name}}</h1>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover text-nowrap">
+                        <tr>
+                            <td>
+                                ID
+                            </td>
+                            <td>
+                                {{$host->id}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Имя
+                            </td>
+                            <td>
+                                {{$host->name}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Дата создания
+                            </td>
+                            <td>
+                                {{$host->created_at}}
+                            </td>
+                        </tr>
+                    </table>
+                <h2 class="mt-5 mb-3">Проверки</h2>
+                <form action={{ "/urls/" . $host->id . "/checks" }} method="post">
+                    {{ csrf_field() }}
+                    <input type="submit" class="btn btn-primary" value="Запустить проверку">
+                </form>
                 <table class="table table-bordered table-hover text-nowrap">
                     <tr>
-                        <td>
-                            ID
-                        </td>
-                        <td>
-                            {{$host->id}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Имя
-                        </td>
-                        <td>
-                            {{$host->name}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Дата создания
-                        </td>
-                        <td>
-                            {{$host->created_at}}
-                        </td>
-                    </tr>
-                </table>
-            <h2 class="mt-5 mb-3">Проверки</h2>
-            <form action={{ "/urls/" . $host->id . "/checks" }} method="post">
-                {{ csrf_field() }}
-                <input type="submit" class="btn btn-primary" value="Запустить проверку">
-            </form>
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover text-nowrap">
-                    <tr>
-                        <td>
-                            ID
-                        </td>
-                        <td>
-                            Дата создания
-                        </td>
-                        <td>
-                            Код ответа
-                        </td>
+                        <th>ID</th>
+                        <th>Код ответа</th>
+                        <th>h1</th>
+                        <th>title</th>
+                        <th>description</th>
+                        <th>Дата создания</th>
                     </tr>
                     @foreach ($checks as $check)
                         <tr>
@@ -88,18 +85,28 @@
                                 {{$check->id}}
                             </td>
                             <td>
-                                {{$check->created_at}}
-                            </td>
-                            <td>
                                 {{$check->status_code}}
                             </td>
+                            <td>
+                                {{$check->h1}}
+                            </td>
+                            <td>
+                                {{$check->title}}
+                            </td>
+                            <td>
+                                {{$check->description}}
+                            </td>
+                            <td>
+                                {{$check->created_at}}
+                            </td>
+
                         </tr>
                     @endforeach
                 </table>
             </div>
-        </div>
-        <!-- <script>
-            $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
-        </script> -->
+            <!-- <script>
+                $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+            </script> -->
+        </main>
     </body>
 </html>

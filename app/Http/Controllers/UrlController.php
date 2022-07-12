@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use DiDom\Document;
+use Illuminate\Support\Str;
 
 class UrlController extends Controller
 {
@@ -167,13 +169,33 @@ class UrlController extends Controller
                     ]);
         }
 
+        $title = '';
+        $h1 = '';
+        $description = '';
+
+        if ($status_code == 200) {
+            $document = new Document($host->name, true);
+            if ($document->has('title')) {
+                $title = $document->first('title')->firstChild()->text();
+            }
+            if ($document->has('h1')) {
+                $h1 = $document->first('h1')->firstChild()->text();
+            }
+            if ($document->has('meta[name=description]')) {
+                $description = $document->first('meta[name=description]')->getAttribute('content');
+            }
+        }
 
         DB::table('url_checks')->insert([
             'url_id' => $id,
             'created_at' => Carbon::now(),
             'status_code' => $status_code,
+            'h1' => Str::limit($h1, 30),
+            'title' => Str::limit($title, 30),
+            'description' => Str::limit($description, 30)
         ]);
 
+        
         flash('Страница успешно проверена')->success();
         return redirect()->route('urls.id', [ 'id' => $host->id ])->with([
             'host' => $host,
