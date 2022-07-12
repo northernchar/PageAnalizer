@@ -182,7 +182,7 @@ class UrlController extends Controller
         }
         if ($document->has('h1')) {
             // $h1children = $document->first('h1')?->children();
-            $h1doc = $document?->first('h1');
+            $h1doc = $document->first('h1');
             $h1children = $h1doc ? $h1doc->children() : [];
             $h1text = array_map(fn($attr) => $attr->text(), $h1children);
             $h1 = implode('', $h1text);
