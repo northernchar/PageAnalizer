@@ -191,9 +191,9 @@ class UrlController extends Controller
             'url_id' => $id,
             'created_at' => Carbon::now(),
             'status_code' => $status_code,
-            'h1' => $h1,
-            'title' => $title,
-            'description' => $description,
+            'h1' => Str::limit($h1, 255, ''),
+            'title' => Str::limit($title, 255, ''),
+            'description' => Str::limit($description, 255, ''),
         ]);
 
         flash('Страница успешно проверена')->success();
