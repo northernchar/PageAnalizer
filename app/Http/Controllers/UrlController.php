@@ -160,7 +160,9 @@ class UrlController extends Controller
         try {
             $resourse = Http::withOptions([
                 'http_errors' => false,
-                'allow_redirects' => false,
+                'allow_redirects' => [
+                    'max' => 5,
+                ],
             ])->get($host->name);
             $status_code = $resourse->status();
             $content = $resourse->body();
@@ -173,6 +175,12 @@ class UrlController extends Controller
         $title = '';
         $h1 = '';
         $description = '';
+
+        if (strlen($content) == 0) {
+            flash('Страница ничего не вернула')->error();
+            return redirect()
+                ->route('urls.id', [ 'id' => $host->id ]);
+        }
 
         $document = new Document($content);
         if ($document->has('title')) {
